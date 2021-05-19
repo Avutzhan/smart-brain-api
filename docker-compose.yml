@@ -1,0 +1,28 @@
+version: '3.6'
+
+services:
+  #Backend api
+  smart-brain-api:
+   #image: node:12.22.1 you can build this service using own docker file not this hand written things
+    build: ./
+    ports:
+    - "3000:3000"
+    command: npm start
+    working_dir: /usr/src/smart-brain-api
+    environment:
+      POSTGRES_URI: postgres://sally:secret@postgres:5432/smart-brain-docker
+    links:
+      - postgres
+    volumes:
+    - ./:/usr/src/smart-brain-api
+
+  #Postgres
+  postgres:
+    environment:
+      POSTGRES_USER: sally
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: smart-brain-docker
+      POSTGRES_HOST: postgres
+    build: ./postgres
+    ports:
+    - "5432:5432"
